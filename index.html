@@ -66,6 +66,7 @@
   .row button .arr{transition:transform .25s}
   .row button:hover .arr{transform:translateX(4px)}
   .row button:disabled{opacity:.5;cursor:default}
+  .soon{margin-top:clamp(30px,5vw,44px);font-family:var(--mono);font-size:12px;letter-spacing:.22em;text-transform:uppercase;color:var(--ink-soft)}
   label.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
   .status{margin-top:16px;min-height:1.3em;font-size:15px;line-height:1.4;font-style:italic;color:var(--ink-soft)}
   .status.err{font-style:normal;font-family:var(--mono);font-size:12px;letter-spacing:.02em;color:#7a2016}
@@ -82,56 +83,8 @@
     <h1 class="fade d1">the <span class="paren">(</span><span class="self">self</span><span class="paren">)</span> issue</h1>
     <p class="dek fade d2">Join the waitlist. Be first to know.</p>
 
-    <form id="waitlist" class="fade d3" novalidate>
-      <div class="row">
-        <label class="sr" for="email">Email address</label>
-        <input id="email" name="email" type="email" inputmode="email" autocomplete="email" placeholder="your email" required>
-        <button type="submit" id="submit"><span class="label">Join</span><span class="arr">&rarr;</span></button>
-      </div>
-      <p class="status" id="status" role="status" aria-live="polite"></p>
-    </form>
+    <p class="soon fade d3">Coming soon</p>
   </main>
 
-<script>
-  const form=document.getElementById('waitlist');
-  const input=document.getElementById('email');
-  const button=document.getElementById('submit');
-  const status=document.getElementById('status');
-  const label=button.querySelector('.label');
-  const arr=button.querySelector('.arr');
-  const valid=e=>/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e);
-
-  form.addEventListener('submit', async e=>{
-    e.preventDefault();
-    const email=input.value.trim();
-    status.className='status';
-    if(!valid(email)){
-      status.className='status err';
-      status.textContent='That email doesn\u2019t look right.';
-      input.focus();
-      return;
-    }
-    button.disabled=true; label.textContent='\u2026';
-    try{
-      const res=await fetch('/signup',{
-        method:'POST',
-        headers:{'Content-Type':'application/json'},
-        body:JSON.stringify({email})
-      });
-      if(!res.ok) throw new Error('bad response');
-      form.reset();
-      input.disabled=true;
-      label.textContent='On the list';
-      arr.textContent='\u2713';
-      status.textContent='You\u2019re in. We\u2019ll be in touch.';
-    }catch(err){
-      button.disabled=false;
-      label.textContent='Join';
-      arr.textContent='\u2192';
-      status.className='status err';
-      status.textContent='Couldn\u2019t send that \u2014 try again in a moment.';
-    }
-  });
-</script>
 </body>
 </html>
